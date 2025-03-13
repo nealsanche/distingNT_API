@@ -40,11 +40,19 @@ jobs:
             (cd "$DIR" && make clean && make)
           done
 
-      - name: Collect and zip object files
+      - name: Prepare directory structure for zip
         run: |
-          mkdir -p programs/plug-ins
-          find . -type f -name "*.o" -exec cp --parents {} programs/plug-ins/ \;
-          zip -r plug-ins.zip programs/plug-ins/
+          mkdir -p release/programs/plug-ins
+          DIRECTORIES=("examples" "faust/examples")  # Use your actual directories here
+          for DIR in "${DIRECTORIES[@]}"; do
+            find "$DIR" -type f -name "*.o" -exec cp {} release/programs/plug-ins/ \;
+          done
+
+      - name: Zip artifacts
+        run: |
+          cd release
+          zip -r ../plug-ins.zip programs
+          cd ..
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2

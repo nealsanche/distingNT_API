@@ -20,7 +20,9 @@ jobs:
 
       - name: Install Faust
         run: |
-          sudo apt-get install -y faust
+          git clone https://github.com/grame-cncm/faust.git
+          cd faust && make && sudo make install
+          rm -rf faust
 
       - name: Verify installation
         run: |
